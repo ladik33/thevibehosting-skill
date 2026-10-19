@@ -28,8 +28,7 @@ Read https://thevibehosting.com/SKILL.md and follow the instructions to deploy y
 - API reference: https://thevibehosting.com/api
 - Pricing: https://thevibehosting.com/pricing
 
-The skill in this repository is a thin entry point that points the agent to the
-canonical guide, so it never goes stale. The hosting service itself is closed-source.
+The hosting service itself is closed-source.
 Operated by [@LadaHrbacek](https://x.com/LadaHrbacek) · hello@thevibehosting.com
 
 License: MIT (this repository only).
