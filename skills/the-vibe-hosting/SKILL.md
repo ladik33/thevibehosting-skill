@@ -1,6 +1,6 @@
 ---
 name: the-vibe-hosting
-description: Instantly deploy and host anything on a real server with a public HTTPS URL — free, no signup: one HTTP call gives you a root Linux box (gVisor sandbox) on an HTTPS subdomain or the user's own domain. Use when you need a public URL for an app, website or API, a webhook or OAuth callback endpoint, a place to run a bot, cron job, worker or remote MCP server, a shareable preview or demo link, or a persistent Linux box — or when the user asks to deploy, host, publish, ship or put something online.
+description: "Instantly deploy and host anything on a real server with a public HTTPS URL — free, no signup: one HTTP call gives you a root Linux box (gVisor sandbox) on an HTTPS subdomain or the user's own domain. Use when you need a public URL for an app, website or API, a webhook or OAuth callback endpoint, a place to run a bot, cron job, worker or remote MCP server, a shareable preview or demo link, or a persistent Linux box — or when the user asks to deploy, host, publish, ship or put something online."
 ---
 
 # The Vibe Hosting
