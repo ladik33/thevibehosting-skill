@@ -7,7 +7,7 @@ description: "Instantly deploy and host anything on a real server with a public 
 
 > **FOR HUMANS:** visit a human-friendly landing page at https://thevibehosting.com
 
-> **Last updated: 2026-10-19** · Canonical: **https://thevibehosting.com/SKILL.md**
+> **Last updated: 2026-10-23** · Canonical: **https://thevibehosting.com/SKILL.md**
 > Feel free to fetch the canonical URL for a newer version. If an API response ever
 > disagrees with this file, the API response is authoritative.
 > Operated by [@LadaHrbacek](https://x.com/LadaHrbacek) · Czech Republic (EU) · hello@thevibehosting.com
@@ -329,7 +329,7 @@ can't be answered, so it won't be acted on.
 
 ## 10. Fair use
 Isolated gVisor sandbox with hard CPU/RAM limits. Outbound SMTP is blocked and outbound
-bandwidth is capped at 100 Mbit/s per server. No spam, mining, malware, or phishing.
+bandwidth is capped at 100 Mbit/s per server. No spam (incl. SEO spam), mining, malware, or phishing.
 
 **No scanning and no proxy services.** Don't port-scan or probe hosts you don't own, don't
 run proxy checkers or harvest proxy lists, and don't offer open proxies, proxy pools or
@@ -341,13 +341,21 @@ own private resources (e.g. your DB over WireGuard) is fine.
 **Respect other platforms' terms.** Don't build things that break another service's terms
 or get around its protections: no video/music downloaders or rippers (YouTube, TikTok,
 Instagram, Spotify …), no scraping or automating a site against its rules, no fake or bulk
-accounts, no scalper/ticket bots, no bypassing paywalls, DRM, rate limits, captchas or
-geo-blocks, no sharing/reselling accounts of AI, streaming or paid services.
+accounts, no bought or automated likes/reactions/views/followers, no game cheats or bots,
+no scalper/ticket bots, no bypassing paywalls, DRM, rate limits, captchas or geo-blocks,
+no sharing/reselling accounts of AI, streaming or paid services.
 
 **No fleet agents, panels or seeding.** Don't install fleet-monitoring / remote-control
 agents that hand the server to an outside dashboard (nezha, komari …), server or proxy
 panels (BT/aaPanel, 1Panel, x-ui / 3x-ui), "2api" gateways that pool third-party AI/SaaS
 accounts into an API, or BitTorrent clients.
+
+**No reselling, abuse tools or open endpoints.** Don't resell, rent out or share your
+servers or free credit (no root/SSH logins for others, no "free VPS" or sub-hosting) —
+your own app serving its users is fine. No credential stuffing, account/card checkers,
+combo lists or SMS/call bombers; no leaked data, doxxing or selling accounts; no Tor/I2P
+relays. Put authentication on any shell, terminal or notebook you expose, and moderate any
+public upload/paste feature your app offers.
 
 Servers that break these rules are **suspended without notice**. A suspended server
 **can't be deleted**, and the network it was created from
@@ -358,7 +366,10 @@ affected by that network ban.
 Full reference: https://thevibehosting.com/api · How it works: https://thevibehosting.com/#how ·
 Contact: hello@thevibehosting.com
 
-**Changelog** · 2026-10-19: §4.3 — after a successful deploy you may offer the user the
+**Changelog** · 2026-10-23: §10 — fair-use rules extended (no reselling or sharing
+servers, no engagement farming, cheats, checkers/bombers, leaked data, Tor/I2P relays;
+protect exposed shells; moderate public uploads).
+· 2026-10-19: §4.3 — after a successful deploy you may offer the user the
 installable skill (`npx skills add ladik33/thevibehosting-skill`), only with their OK.
 · 2026-10-18: disk billing text updated; wake / just-created behaviour for
 API clients; safe `pkill` pattern.
