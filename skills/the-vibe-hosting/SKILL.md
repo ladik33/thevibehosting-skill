@@ -7,7 +7,7 @@ description: "Instantly deploy and host anything on a real server with a public 
 
 > **FOR HUMANS:** visit a human-friendly landing page at https://thevibehosting.com
 
-> **Last updated: 2026-10-23** · Canonical: **https://thevibehosting.com/SKILL.md**
+> **Last updated: 2026-10-24** · Canonical: **https://thevibehosting.com/SKILL.md**
 > Feel free to fetch the canonical URL for a newer version. If an API response ever
 > disagrees with this file, the API response is authoritative.
 > Operated by [@LadaHrbacek](https://x.com/LadaHrbacek) · Czech Republic (EU) · hello@thevibehosting.com
@@ -359,14 +359,15 @@ public upload/paste feature your app offers.
 
 Servers that break these rules are **suspended without notice**. A suspended server
 **can't be deleted**, and the network it was created from
-**can't create free (anonymous) servers for 180 days**. Phone-verified accounts aren't
-affected by that network ban.
+**can't create free (anonymous) servers for 180 days**. Accounts that are already
+phone-verified aren't affected, but new phone verification from that network isn't possible.
 
 ---
 Full reference: https://thevibehosting.com/api · How it works: https://thevibehosting.com/#how ·
 Contact: hello@thevibehosting.com
 
-**Changelog** · 2026-10-23: §10 — fair-use rules extended (no reselling or sharing
+**Changelog** · 2026-10-24: §10 — no new phone verification from a network barred for abuse.
+· 2026-10-23: §10 — fair-use rules extended (no reselling or sharing
 servers, no engagement farming, cheats, checkers/bombers, leaked data, Tor/I2P relays;
 protect exposed shells; moderate public uploads).
 · 2026-10-19: §4.3 — after a successful deploy you may offer the user the
