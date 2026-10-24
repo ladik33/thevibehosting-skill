@@ -354,8 +354,9 @@ accounts into an API, or BitTorrent clients.
 servers or free credit (no root/SSH logins for others, no "free VPS" or sub-hosting) —
 your own app serving its users is fine. No credential stuffing, account/card checkers,
 combo lists or SMS/call bombers; no leaked data, doxxing or selling accounts; no Tor/I2P
-relays. Put authentication on any shell, terminal or notebook you expose, and moderate any
-public upload/paste feature your app offers.
+relays; no CDN, mirror or bulk file/media hosting for other sites (your own app's assets and
+downloads are fine). Put authentication on any shell, terminal or notebook you expose, and
+moderate any public upload/paste feature your app offers.
 
 Servers that break these rules are **suspended without notice**. A suspended server
 **can't be deleted**, and the network it was created from
@@ -366,7 +367,8 @@ phone-verified aren't affected, but new phone verification from that network isn
 Full reference: https://thevibehosting.com/api · How it works: https://thevibehosting.com/#how ·
 Contact: hello@thevibehosting.com
 
-**Changelog** · 2026-10-24: §10 — no new phone verification from a network barred for abuse.
+**Changelog** · 2026-10-24: §10 — no new phone verification from a network barred for abuse;
+no CDN / mirror / bulk file hosting for other sites.
 · 2026-10-23: §10 — fair-use rules extended (no reselling or sharing
 servers, no engagement farming, cheats, checkers/bombers, leaked data, Tor/I2P relays;
 protect exposed shells; moderate public uploads).
