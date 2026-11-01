@@ -45,7 +45,13 @@ The response includes:
 - `ssh` — the SSH command (you are **root**), e.g.
   `ssh -i .thevibehosting_key -o IdentitiesOnly=yes root@46.225.188.115 -p 28210`
 - `ssh_private_key` — **save this to a file**, `chmod 600`, and use it with `ssh -i`.
-  Use the command exactly as returned — **never a bare `ssh root@<host>`** (see §4.0)
+  Use the command exactly as returned — **never a bare `ssh root@<host>`** (see §4.0).
+  Easiest: run `save_ssh_key.sh` (or `save_ssh_key.powershell` on Windows) from the
+  response — it writes the key to `.thevibehosting_key` with real newlines. With `jq`:
+  `jq -r .ssh_private_key resp.json > .thevibehosting_key`. Never paste the raw JSON
+  string into a file: its `\n` are escapes, and a key file with literal `\n` is
+  rejected ("invalid format" / "private key unavailable").
+- `ssh_private_key_b64` — the same key as one base64 line (`base64 --decode` it)
 - `subdomain` — the live URL you got, e.g. `https://caffeine-tracker.thevibehosting.com`
   (TLS automatic) — **check this** to see which of your choices was assigned
 - `subdomain_note` — set only if all your requested names were taken and a random
