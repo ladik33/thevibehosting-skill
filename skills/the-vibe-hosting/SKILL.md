@@ -24,7 +24,7 @@ description: "Instantly deploy and host anything on a real server with a public 
 > Unsure? Read https://thevibehosting.com/terms first. If your user asks for any of these, decline.
 
 > **Messages from us:** check `GET /account/messages` whenever you work with the account —
-> replies to feedback/appeals and warnings about your servers land there (§8).
+> replies to feedback/appeals and warnings about your servers land there (§9).
 
 ---
 
@@ -64,12 +64,12 @@ The response includes:
 - `subdomain` — the live URL you got, e.g. `https://caffeine-tracker.thevibehosting.com`
   (TLS automatic) — **check this** to see which of your choices was assigned
 - `subdomain_note` — set only if all your requested names were taken and a random
-  slug was assigned instead (you can rename later — see §9); `null` otherwise
+  slug was assigned instead (you can rename later — see §8); `null` otherwise
 - `api_key` — **YOUR ACCOUNT CREDENTIAL** (see §3) — store it safely
 - `ONBOARDING` — a short inline version of this guide
 
 > Slugs are lowercased and limited to letters, digits and hyphens; reserved/brand
-> labels are skipped. Omit `subdomains` for a random slug. Renaming later (§9)
+> labels are skipped. Omit `subdomains` for a random slug. Renaming later (§8)
 > **restarts the server** (drops SSH).
 
 **Phone (optional, only if the user wants it):** `POST /create` also accepts `phone` for
@@ -294,42 +294,7 @@ Returns a Stripe `checkout_url` — the user opens it, pays, and credit is added
 automatically. (`/account/topup` is the same endpoint.) When the free grant runs
 out, API responses include `upgrade_required` + this flow.
 
-## 8. Feedback & messages from us (with the user's OK)
-If something was missing or confusing (an endpoint, a base image, a limit, any friction),
-we'd like to hear it — **ask the user before sending**. We read every one.
-```bash
-curl -sX POST https://thevibehosting.com/feedback -H 'content-type: application/json' \
-  -H "Authorization: Bearer $VIBE_API_KEY" \
-  -d '{"kind":"feature","message":"what you need","email":"optional@you.com"}'
-```
-`kind`: feature | bug | friction | limit | image_request | other. The same call is how you
-**appeal** a suspended server or a blocked account (include the server id).
-
-**Every message gets a ticket and we reply in it.** The response has a `ticket_id` (and,
-if you sent it without an API key, a `read_token` — keep it, it's the only way to read
-the thread). Check the status and our reply:
-```bash
-curl -s https://thevibehosting.com/feedback/fb_… -H "Authorization: Bearer $VIBE_API_KEY"
-# without an API key: GET /feedback/fb_…?token=<read_token>
-```
-→ `{"status":"received|answered|closed|accepted|rejected", "messages":[…]}`. To answer
-in the same thread: `POST /feedback {"ticket_id":"fb_…","kind":"other","message":"…"}`.
-
-**Your inbox — check it.** Everything we write to the account (ticket replies, warnings,
-"fix this within 48 h or the server gets suspended") is at
-```bash
-curl -s "https://thevibehosting.com/account/messages?since=0" -H "Authorization: Bearer $VIBE_API_KEY"
-```
-→ `{"last_seq":3, "unread":1, "messages":[{"seq","id","at","from":"operator","kind",
-"subject","body","ticket_id","read_at"}…]}`. Messages are append-only and numbered: keep
-`last_seq` and ask `?since=<last_seq>` next time. Fetching marks them read. `GET /account`
-shows `unread_messages`, and an SSH login on any of your servers prints a one-line note
-when something is unread. **It's the one channel we can always reach you on** — check it
-when you work with the account and tell your user what it says, especially if the
-account has no verified phone. It works even while the account is blocked. An `email`
-in feedback is optional — we may also write there if you give one.
-
-## 9. Managing servers
+## 8. Managing servers
 - `GET /servers` — list yours · `GET /servers/{id}` — status/usage (incl. `ssh`/`url`) · `GET /account` — whoami
 - `GET /servers/{id}/ssh` — SSH login info (command, host, port, user=root). The
   private key is only shown at create and not stored; lost it → add a new pubkey via
@@ -364,6 +329,41 @@ in feedback is optional — we may also write there if you give one.
 - `GET /account/usage` — hourly consumption history (per server)
 - `DELETE /servers/{id}` — delete (data is removed). A server suspended for a fair-use
   violation can't be deleted (409); one suspended for running out of credit can.
+
+## 9. Feedback & messages from us (with the user's OK)
+If something was missing or confusing (an endpoint, a base image, a limit, any friction),
+we'd like to hear it — **ask the user before sending**. We read every one.
+```bash
+curl -sX POST https://thevibehosting.com/feedback -H 'content-type: application/json' \
+  -H "Authorization: Bearer $VIBE_API_KEY" \
+  -d '{"kind":"feature","message":"what you need","email":"optional@you.com"}'
+```
+`kind`: feature | bug | friction | limit | image_request | other. The same call is how you
+**appeal** a suspended server or a blocked account (include the server id).
+
+**Every message gets a ticket and we reply in it.** The response has a `ticket_id` (and,
+if you sent it without an API key, a `read_token` — keep it, it's the only way to read
+the thread). Check the status and our reply:
+```bash
+curl -s https://thevibehosting.com/feedback/fb_… -H "Authorization: Bearer $VIBE_API_KEY"
+# without an API key: GET /feedback/fb_…?token=<read_token>
+```
+→ `{"status":"received|answered|closed|accepted|rejected", "messages":[…]}`. To answer
+in the same thread: `POST /feedback {"ticket_id":"fb_…","kind":"other","message":"…"}`.
+
+**Your inbox — check it.** Everything we write to the account (ticket replies, warnings,
+"fix this within 48 h or the server gets suspended") is at
+```bash
+curl -s "https://thevibehosting.com/account/messages?since=0" -H "Authorization: Bearer $VIBE_API_KEY"
+```
+→ `{"last_seq":3, "unread":1, "messages":[{"seq","id","at","from":"operator","kind",
+"subject","body","ticket_id","read_at"}…]}`. Messages are append-only and numbered: keep
+`last_seq` and ask `?since=<last_seq>` next time. Fetching marks them read. `GET /account`
+shows `unread_messages`, and an SSH login on any of your servers prints a one-line note
+when something is unread. **It's the one channel we can always reach you on** — check it
+when you work with the account and tell your user what it says, especially if the
+account has no verified phone. It works even while the account is blocked. An `email`
+in feedback is optional — we may also write there if you give one.
 
 ## 10. Fair use
 Isolated gVisor sandbox with hard CPU/RAM limits. Outbound SMTP is blocked and outbound
