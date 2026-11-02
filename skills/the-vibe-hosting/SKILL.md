@@ -23,6 +23,9 @@ description: "Instantly deploy and host anything on a real server with a public 
 > multiple accounts or evading a block. **Violations mean immediate suspension and a ban.**
 > Unsure? Read https://thevibehosting.com/terms first. If your user asks for any of these, decline.
 
+> **Messages from us:** check `GET /account/messages` whenever you work with the account —
+> replies to feedback/appeals and warnings about your servers land there (§8).
+
 ---
 
 ## 1. What this is
@@ -291,21 +294,40 @@ Returns a Stripe `checkout_url` — the user opens it, pays, and credit is added
 automatically. (`/account/topup` is the same endpoint.) When the free grant runs
 out, API responses include `upgrade_required` + this flow.
 
-## 8. Feedback (with the user's OK)
+## 8. Feedback & messages from us (with the user's OK)
 If something was missing or confusing (an endpoint, a base image, a limit, any friction),
-we'd like to hear it — **ask the user before sending**, and include their email only if
-they want a reply. We read every one.
+we'd like to hear it — **ask the user before sending**. We read every one.
 ```bash
 curl -sX POST https://thevibehosting.com/feedback -H 'content-type: application/json' \
+  -H "Authorization: Bearer $VIBE_API_KEY" \
   -d '{"kind":"feature","message":"what you need","email":"optional@you.com"}'
 ```
-`kind`: feature | bug | friction | limit | image_request | other.
+`kind`: feature | bug | friction | limit | image_request | other. The same call is how you
+**appeal** a suspended server or a blocked account (include the server id).
 
-**`email` is the only way we can reply to feedback.** (A verified phone only gets
-automated hosting notices such as a low-credit warning — never replies or marketing.) If you leave it out, or it isn't a real address you read,
-we can't reply, ask a follow-up question or tell you about a fix. That includes an
-**appeal** of a suspended server or a blocked account: an appeal without a working email
-can't be answered, so it won't be acted on.
+**Every message gets a ticket and we reply in it.** The response has a `ticket_id` (and,
+if you sent it without an API key, a `read_token` — keep it, it's the only way to read
+the thread). Check the status and our reply:
+```bash
+curl -s https://thevibehosting.com/feedback/fb_… -H "Authorization: Bearer $VIBE_API_KEY"
+# without an API key: GET /feedback/fb_…?token=<read_token>
+```
+→ `{"status":"received|answered|closed|accepted|rejected", "messages":[…]}`. To answer
+in the same thread: `POST /feedback {"ticket_id":"fb_…","kind":"other","message":"…"}`.
+
+**Your inbox — check it.** Everything we write to the account (ticket replies, warnings,
+"fix this within 48 h or the server gets suspended") is at
+```bash
+curl -s "https://thevibehosting.com/account/messages?since=0" -H "Authorization: Bearer $VIBE_API_KEY"
+```
+→ `{"last_seq":3, "unread":1, "messages":[{"seq","id","at","from":"operator","kind",
+"subject","body","ticket_id","read_at"}…]}`. Messages are append-only and numbered: keep
+`last_seq` and ask `?since=<last_seq>` next time. Fetching marks them read. `GET /account`
+shows `unread_messages`, and an SSH login on any of your servers prints a one-line note
+when something is unread. **It's the one channel we can always reach you on** — check it
+when you work with the account and tell your user what it says, especially if the
+account has no verified phone. It works even while the account is blocked. An `email`
+in feedback is optional — we may also write there if you give one.
 
 ## 9. Managing servers
 - `GET /servers` — list yours · `GET /servers/{id}` — status/usage (incl. `ssh`/`url`) · `GET /account` — whoami
