@@ -195,7 +195,9 @@ So: prefer static files, a small binary (Go/Rust), or a minimal framework (Flask
   with `Retry-After` for a few seconds — retry; it is not a failed deploy.
 - **It's a real disk-backed box — everything persists.** Anything you install (`apt`)
   or write stays put across idle-sleep, restarts and renames. Put your data wherever
-  you like. (Renaming the subdomain briefly restarts the box, so an open SSH session
+  you like. One managed spot: `/root/.ssh/authorized_keys` gets the server's create-time
+  key re-added on every start (your own lines stay); extra keys are best added with
+  `POST /servers/{id}/ssh-key` (stored in `authorized_keys2`). (Renaming the subdomain briefly restarts the box, so an open SSH session
   drops — just reconnect, host key unchanged.)
 - **Disk:** billed **$0.25/GB-month** on your **real aggregate usage** (24/7, even while a
   server sleeps), from the same credit. `GET /account/billing` shows what your disk costs
@@ -309,7 +311,9 @@ can't be answered, so it won't be acted on.
 - `GET /servers` — list yours · `GET /servers/{id}` — status/usage (incl. `ssh`/`url`) · `GET /account` — whoami
 - `GET /servers/{id}/ssh` — SSH login info (command, host, port, user=root). The
   private key is only shown at create and not stored; lost it → add a new pubkey via
-  `POST /servers/{id}/ssh-key`
+  `POST /servers/{id}/ssh-key {public_key}` — also for a second machine or a restricted
+  key: options are allowed, e.g. `restrict,command="/root/export.sh" ssh-ed25519 AAAA…`.
+  Survives sleep and restarts.
 - `POST /servers/{id}/subdomain {subdomain}` — rename (briefly restarts to re-point
   routing; your data is unaffected, open SSH drops — reconnect, host key unchanged)
 - `POST /servers/{id}/expose {container_port}` — publish a raw TCP/UDP port (TCP: no
