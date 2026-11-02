@@ -132,6 +132,17 @@ hostname | grep -qx 'caffeine-tracker' || { echo "WRONG HOST — aborting"; exit
 EOF
 ```
 
+**Reuse one connection — don't open a new one per command.** Dozens of short SSH
+connections in a few minutes look like a brute-force attack and the address gets
+refused for a while (worse through a VPN/WARP that keeps changing your IP). Batch commands
+into one `ssh … bash -s <<'EOF'` as above, upload in one `scp`/`rsync`, or keep one
+multiplexed connection open:
+```bash
+ssh -i .thevibehosting_key -o IdentitiesOnly=yes -o ControlMaster=auto \
+    -o ControlPath=~/.ssh/cm-%r@%h:%p -o ControlPersist=30m root@<host> -p <port> 'true'
+# later calls with the same -o ControlPath=… reuse that connection instantly
+```
+
 ### 4.1 Publishing your app
 It's a **full root Linux box** — run anything (web app, worker, bot, cron, a DB,
 compile things). Nothing forces a layout. The only opinionated part is publishing
