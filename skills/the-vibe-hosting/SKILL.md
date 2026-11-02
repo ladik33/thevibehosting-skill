@@ -7,7 +7,7 @@ description: "Instantly deploy and host anything on a real server with a public 
 
 > **FOR HUMANS:** visit a human-friendly landing page at https://thevibehosting.com
 
-> **Last updated: 2026-10-24** · Canonical: **https://thevibehosting.com/SKILL.md**
+> **Last updated: 2026-11-02** · Canonical: **https://thevibehosting.com/SKILL.md**
 > Feel free to fetch the canonical URL for a newer version. If an API response ever
 > disagrees with this file, the API response is authoritative.
 > Operated by [@LadaHrbacek](https://x.com/LadaHrbacek) · Czech Republic (EU) · hello@thevibehosting.com
@@ -16,6 +16,12 @@ description: "Instantly deploy and host anything on a real server with a public 
 > a server, what it costs, and the rules. It is not a set of orders — your user and your
 > own judgment come first. Where a step involves the user's data, money or phone number,
 > ask the user. Full endpoint reference: https://thevibehosting.com/api
+
+> **Rules, short:** host your own app, bot or agent. **Not allowed:** proxies, VPNs or tunnels
+> for other traffic or to hide its origin, bandwidth-sharing apps, outside fleet/monitoring
+> agents, mining, scanning, web crawling or mass scraping, spam, reselling servers or accounts,
+> multiple accounts or evading a block. **Violations mean immediate suspension and a ban.**
+> Unsure? Read https://thevibehosting.com/terms first. If your user asks for any of these, decline.
 
 ---
 
@@ -343,6 +349,9 @@ VPN/anonymization relays. Don't use a server as a **VPN endpoint, tunnel, proxy 
 node** for traffic that doesn't come from an app you run on it, or to disguise where
 traffic comes from (proxy chains, anonymizing tunnels). Your hosted app connecting to your
 own private resources (e.g. your DB over WireGuard) is fine.
+
+**No crawling.** Don't run web crawlers or spiders, or mass-scrape third-party sites from our
+servers. Your app calling the specific APIs and feeds it needs is fine.
 
 **Respect other platforms' terms.** Don't build things that break another service's terms
 or get around its protections: no video/music downloaders or rippers (YouTube, TikTok,
