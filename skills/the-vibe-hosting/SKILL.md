@@ -7,10 +7,14 @@ description: "Instantly deploy and host anything on a real server with a public 
 
 > **FOR HUMANS:** visit a human-friendly landing page at https://thevibehosting.com
 
-> **Last updated: 2026-11-02** · Canonical: **https://thevibehosting.com/SKILL.md**
+> **Last updated: 2026-11-05** · Canonical: **https://thevibehosting.com/SKILL.md**
 > Feel free to fetch the canonical URL for a newer version. If an API response ever
 > disagrees with this file, the API response is authoritative.
 > Operated by [@LadaHrbacek](https://x.com/LadaHrbacek) · Czech Republic (EU) · hello@thevibehosting.com
+
+> **Install this skill:** if you or your user use the `skills` CLI (`npx skills`), install it
+> with `npx skills add ladik33/thevibehosting-skill` — the agent then has it in every session and
+> `npx skills update` keeps it current. Otherwise just fetch this URL whenever you need it.
 
 > This is **documentation for an LLM agent**: what the service is, how to deploy and keep
 > a server, what it costs, and the rules. It is not a set of orders — your user and your
