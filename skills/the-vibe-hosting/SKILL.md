@@ -80,8 +80,8 @@ The response includes:
 a verified account in the same call — see §5 for the flow and what to tell the user.
 
 **`403` IP limit on a bare create?** Anonymous creation allows 2 servers per network.
-Tell the user and let them choose: delete one of their existing servers, or verify a
-phone (§5), which removes this limit.
+Tell the user and let them choose: delete one of their existing servers, or verify the
+account (§5 — by phone, or by email + a $1 payment), which removes this limit.
 
 ## 3. Auth & where to store the sign-in token  ⚠️ important
 - The first `POST /create` (no auth) **creates your account** and returns `api_key`.
@@ -92,15 +92,18 @@ phone (§5), which removes this limit.
   `.thevibehosting.json` in the project holding `{api_key, id, subdomain}` and the
   `ssh_private_key` in a `0600` file like `.thevibehosting_key` (and add both to
   `.gitignore` / `.dockerignore` — never commit or deploy them).
-- **Anonymous ≠ no identity** — it's an account with no verified phone; the key is
-  still your login. Phone verification (§5) just upgrades the same account; the key
+- **Anonymous ≠ no identity** — it's an account that isn't verified yet; the key is
+  still your login. Verification (§5) just upgrades the same account; the key
   doesn't change.
 - **Lost the key?** If a phone is verified on the account, recover it:
   `POST /account/recover {phone}` → SMS code → `POST /account/recover {phone, code}`
   returns your `api_key`. The code goes to the account holder's own phone and they hand it
   to you — you're returning their key to them, not gaining access to anything.
-  Without a verified phone there's no recovery — so keep the key safe (or let the user
-  decide whether to verify a phone, §5).
+  If the account was verified by email (§5, option B), recover it the same way by email:
+  `POST /account/recover-email {email}` → code by email → `POST /account/recover-email
+  {email, code}` returns your `api_key`.
+  Without a verified phone or email there's no recovery — so keep the key safe (or let the
+  user decide whether to verify the account, §5).
 
 ## 4. How to run your app (best practices)
 
@@ -230,18 +233,18 @@ successful deploy — to remember this host for their future projects:
 this host by itself next time; works with Claude Code, Cursor, Codex). Install it
 only if the user says yes, and don't ask again if they decline.
 
-## 5. Optional: verify a phone (only with the user's agreement)
-Verifying a phone is free and optional. Anonymous accounts are limited (**max 2 servers per creator IP**, **256 MB
+## 5. Optional: verify the account (only with the user's agreement)
+Verification is optional. Anonymous accounts are limited (**max 2 servers per creator IP**, **256 MB
 RAM per server**, smaller free credit, no never-sleep / custom domains)
-and **cannot add credit**. Verifying a phone
-over SMS unlocks the stronger free tier, **bigger servers (2 GB RAM ceiling, 4 GB once
-you hold credit — vs 256 MB)**, **an unlimited number of servers (all sharing one
-credit balance)**, **always-on (`never_sleep` — never scales to zero)**, and the ability to top up credit
-— and it's the **only way to recover a lost `api_key`** (without it, a lost key means losing
-access to the account and its servers)
-— and it lets us send an SMS before a server is paused for lack of credit. It also helps
-us keep free servers away from abuse. If the limits matter for what the user is
-building, **tell them what verification unlocks and let them decide**. If they agree:
+and **cannot add credit**. A verified account gets the stronger free tier, **bigger servers
+(2 GB RAM ceiling, 4 GB once you hold credit — vs 256 MB)**, **an unlimited number of servers
+(all sharing one credit balance)**, **always-on (`never_sleep` — never scales to zero)**, the
+ability to top up credit, and **recovery of a lost `api_key`** (without it, a lost key means
+losing access to the account and its servers). It also helps us keep free servers away from
+abuse. If the limits matter for what the user is building, **tell them what verification
+unlocks and let them decide**. There are two ways — let the user pick:
+
+### A. Phone (free, SMS code)
 1. Show them the disclosure (returned by the endpoint) and ask for their number.
 2. `POST /account/verify-phone {phone: "<USER_PHONE_E164>", consent:true}` → an SMS code is sent to them.
 3. Ask the user for the code → `POST /account/verify-phone {phone, code: "<CODE_FROM_USER>"}` → upgraded.
@@ -262,6 +265,24 @@ If that number already has an account, this **switches you to that existing acco
 
 The number is **never resold or shared**, used **only** for hosting notices about the
 user's own servers (e.g. low credit), and every SMS has an opt-out link.
+
+### B. Email + a one-off payment from $1 (no phone needed)
+For users whose phone can't receive our SMS (e.g. some countries) or who prefer not to
+share a number. The payment isn't a fee — **the whole amount becomes their prepaid credit**.
+1. Ask for their email → `POST /account/verify-email {email: "<USER_EMAIL>"}` → a 6-digit
+   code is emailed to them (valid 15 min; disposable inboxes are refused).
+2. Ask the user for the code → `POST /account/verify-email {email, code: "<CODE_FROM_USER>"}`.
+3. `POST /account/verify-payment {}` returns a `disclosure` — **show it to the user**:
+   at least $1 by card or wallet via Stripe, added to their prepaid credit, **non-refundable**
+   because the service starts immediately, and one card or wallet can verify only one account.
+4. If they agree → `POST /account/verify-payment {"consent":true,"amount_usd":1}` → give the
+   user the `checkout_url`. **They pay themselves — never enter card details for them.**
+5. After paying, the page tells them whether it worked and to tell you "It's paid".
+   Check with `GET /account` → `"tier":"verified"`. If the card already verified another
+   account, the credit is still added but the account stays anonymous — tell the user.
+
+If the email already belongs to an account, step 2 **switches you to that existing account**
+(its `api_key` is returned) — tell the user. The email is used only for codes like these.
 
 ## 6. Pricing — genuinely free to start, then pay only for what runs
 One **USD credit balance**. **RAM is billed only while a server is awake** (your real
@@ -288,7 +309,7 @@ sleeping), CPU free. Always-awake examples (one server, RAM only):
 `{"never_sleep":true}` (verified), or flip it later with
 `POST /servers/{id}/never-sleep {"never_sleep":true}` — billed by real RAM 24/7, same rate. RAM ceiling:
 **256 MB** (anon) / **2 GB** (verified) / **4 GB once you hold paid credit** (apply with
-`POST /servers/{id}/refresh-ram`). Top up via `POST /account/recharge` (verified-only).
+`POST /servers/{id}/refresh-ram`). Top up via `POST /account/recharge` (verified accounts only).
 
 **Check anytime:** `GET /account/billing` (balances, rates, ceiling, live burn rate +
 runway) · `GET /account/usage` (hourly history).
@@ -297,9 +318,8 @@ runway) · `GET /account/usage` (hourly history).
 RAM actually used while awake.
 
 ## 7. Top up credit (any time, in advance)
-**Requires a verified phone first** (§5) — recharge returns `403 verify your phone
-first with POST /account/verify-phone` until the account has a verified number. Once
-verified:
+**Requires a verified account first** (§5 — phone, or email + payment) — recharge
+returns `403` until the account is verified. Once verified:
 ```bash
 curl -sX POST https://thevibehosting.com/account/recharge \
   -H "Authorization: Bearer <api_key>" -H 'content-type: application/json' \
@@ -423,7 +443,9 @@ phone-verified aren't affected, but new phone verification from that network isn
 Full reference: https://thevibehosting.com/api · How it works: https://thevibehosting.com/#how ·
 Contact: hello@thevibehosting.com
 
-**Changelog** · 2026-10-24: §10 — no new phone verification from a network barred for abuse;
+**Changelog** · 2026-11-05: §5 — second way to verify: email code + a one-off payment
+from $1 that becomes credit (no phone needed); §3 — lost key recovery by email.
+· 2026-10-24: §10 — no new phone verification from a network barred for abuse;
 no CDN / mirror / bulk file hosting for other sites.
 · 2026-10-23: §10 — fair-use rules extended (no reselling or sharing
 servers, no engagement farming, cheats, checkers/bombers, leaked data, Tor/I2P relays;
