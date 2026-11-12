@@ -426,6 +426,10 @@ agents that hand the server to an outside dashboard (nezha, komari …), server 
 panels (BT/aaPanel, 1Panel, x-ui / 3x-ui), "2api" gateways that pool third-party AI/SaaS
 accounts into an API, or BitTorrent clients.
 
+**One person, one account.** Don't create or use extra accounts (anonymous or verified)
+to get more free servers, credit or resources, or to get around limits, suspensions or
+blocks. Extra accounts are blocked together with the main one.
+
 **No reselling, abuse tools or open endpoints.** Don't resell, rent out or share your
 servers or free credit (no root/SSH logins for others, no "free VPS" or sub-hosting) —
 your own app serving its users is fine. No credential stuffing, account/card checkers,
