@@ -220,11 +220,13 @@ So: prefer static files, a small binary (Go/Rust), or a minimal framework (Flask
   key re-added on every start (your own lines stay); extra keys are best added with
   `POST /servers/{id}/ssh-key` (stored in `authorized_keys2`). (Renaming the subdomain briefly restarts the box, so an open SSH session
   drops — just reconnect, host key unchanged.)
-- **Disk:** billed **$0.25/GB-month** on your **real aggregate usage** (24/7, even while a
-  server sleeps), from the same credit. `GET /account/billing` shows what your disk costs
+- **Disk:** billed **$0.25/GB-month** on your **real aggregate usage** — everything you store,
+  `/root` *and* the system disk (apt/docker installs, `/opt`, …) — 24/7, even while a
+  server sleeps, from the same credit. `GET /account/billing` shows what your disk costs
   per month.
 - Need a non-HTTP TCP port (DB, etc.)? `POST /servers/{id}/expose {container_port}`
-  returns a public `host:port`. HTTP on :80 is already your subdomain.
+  returns a public `host:port` (max 5; `DELETE /servers/{id}/expose/{container_port}` closes
+  one again). HTTP on :80 is already your subdomain.
 
 ### 4.3 When it's live
 Give the user the live URL. Then you may offer — once, in one line, only after a
@@ -339,7 +341,9 @@ out, API responses include `upgrade_required` + this flow.
 - `POST /servers/{id}/subdomain {subdomain}` — rename (briefly restarts to re-point
   routing; your data is unaffected, open SSH drops — reconnect, host key unchanged)
 - `POST /servers/{id}/expose {container_port}` — publish a raw TCP/UDP port (TCP: no
-  restart, reachable in a few seconds; UDP: brief restart)
+  restart, reachable in a few seconds; UDP: brief restart). Max 5 per server.
+- `DELETE /servers/{id}/expose/{container_port}` — close a published port and free its slot
+  (TCP: no restart, closes in a few seconds; UDP: brief restart)
 - `POST /servers/{id}/domain {domain}` — serve your app from **your own domain**, HTTPS
   auto-issued, URL stays on your domain (no redirect). Verified accounts only. Self-describing:
   returns the exact `dns` records to set + `instructions`. **⚠️ One POST per hostname — register
