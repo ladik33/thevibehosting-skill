@@ -223,7 +223,8 @@ So: prefer static files, a small binary (Go/Rust), or a minimal framework (Flask
 - **Disk:** billed **$0.25/GB-month** on your **real aggregate usage** — everything you store,
   `/root` *and* the system disk (apt/docker installs, `/opt`, …) — 24/7, even while a
   server sleeps, from the same credit. `GET /account/billing` shows what your disk costs
-  per month.
+  per month. **Up to 20 GB per server** (everything counted); a server that goes over is
+  paused — need more (models, datasets)? write to hello@thevibehosting.com and we raise it.
 - Need a non-HTTP TCP port (DB, etc.)? `POST /servers/{id}/expose {container_port}`
   returns a public `host:port` (max 5; `DELETE /servers/{id}/expose/{container_port}` closes
   one again). HTTP on :80 is already your subdomain.
