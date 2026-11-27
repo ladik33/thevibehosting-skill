@@ -102,8 +102,14 @@ account (§5 — by phone, or by email + a $1 payment), which removes this limit
   If the account was verified by email (§5, option B), recover it the same way by email:
   `POST /account/recover-email {email}` → code by email → `POST /account/recover-email
   {email, code}` returns your `api_key`.
-  Without a verified phone or email there's no recovery — so keep the key safe (or let the
-  user decide whether to verify the account, §5).
+  Without a confirmed phone or email there's no recovery — so keep the key safe.
+- **Optional, recommended: add a contact email (free, no payment, any account).** Ask the
+  user for their email → `POST /account/verify-email {email}` → they get a 6-digit code →
+  `POST /account/verify-email {email, code}`. That alone gives them **key recovery by
+  email** and **notices by email** (low credit, credit ran out, messages from us about
+  their servers — otherwise these only reach `GET /account/messages`). It does not change
+  the tier or limits; it is also step 1 of verification by payment (§5 B) if they want
+  that later. Disposable inboxes are refused.
 
 ## 4. How to run your app (best practices)
 
@@ -285,7 +291,9 @@ share a number. The payment isn't a fee — **the whole amount becomes their pre
    account, the credit is still added but the account stays anonymous — tell the user.
 
 If the email already belongs to an account, step 2 **switches you to that existing account**
-(its `api_key` is returned) — tell the user. The email is used only for codes like these.
+(its `api_key` is returned) — tell the user. The email is used only for these codes and
+for notices about the user's own account and servers (low credit, messages from us) —
+never for marketing, never shared.
 
 ## 6. Pricing — genuinely free to start, then pay only for what runs
 One **USD credit balance**. **RAM is billed only while a server is awake** (your real
@@ -452,7 +460,9 @@ phone-verified aren't affected, but new phone verification from that network isn
 Full reference: https://thevibehosting.com/api · How it works: https://thevibehosting.com/#how ·
 Contact: hello@thevibehosting.com
 
-**Changelog** · 2026-11-05: §5 — second way to verify: email code + a one-off payment
+**Changelog** · 2026-11-27: §3 — a contact email can be added to any account for free
+(key recovery + notices by email), without the payment step.
+· 2026-11-05: §5 — second way to verify: email code + a one-off payment
 from $1 that becomes credit (no phone needed); §3 — lost key recovery by email.
 · 2026-10-24: §10 — no new phone verification from a network barred for abuse;
 no CDN / mirror / bulk file hosting for other sites.
